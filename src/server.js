@@ -27,7 +27,7 @@ sockets.on('connection', (socket) => {
     socket.emit('setup', game.state)
 
     socket.on('disconnect', () => {
-        game.removePlayer({ playerId })
+        game.removePlayer({ playerId });
         console.log(`Player ${playerId} disconnected`)
     })
 

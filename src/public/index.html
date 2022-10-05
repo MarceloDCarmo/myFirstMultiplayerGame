@@ -29,11 +29,11 @@
             const playerId = socket.id
             console.log(`> Connected on server with id: ${playerId}`)
 
+            keyboardListener.unsubscribeAll()
             renderScreen(screen, game, playerId)
         })
         
         socket.on('setup', (state) => {
-            console.log('> Receiving state from server')
             
             const playerId = socket.id
             

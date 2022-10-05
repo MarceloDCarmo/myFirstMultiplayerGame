@@ -27,6 +27,10 @@ export default function createGame() {
         }
     }
 
+    function unsubscribeAll() {
+        observers.length = 0
+    }
+
     function setState(newState) {
         Object.assign(state, newState)
     }
@@ -95,9 +99,7 @@ export default function createGame() {
         for (const fruitId in state.fruits) {
             const fruit = state.fruits[fruitId]
 
-            console.log(`Checking for fruit Collision with ${fruitId}`)
             if (player.x == fruit.x && player.y == fruit.y) {
-                console.log(`Collision between ${playerId} and ${fruitId}`)
                 removeFruit({ fruitId })
             }
         }
@@ -144,6 +146,7 @@ export default function createGame() {
         state,
         setState,
         subscribe,
-        start
+        start,
+        unsubscribeAll
     }
 }
