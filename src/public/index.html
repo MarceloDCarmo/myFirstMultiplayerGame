@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Primeiro Jogo Multiplayer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <canvas id="screen"></canvas>
+
+    <script type="module">
+        import createGame from "./game.js";
+        import createKeyboardListener from "./keyboardListener.js"
+        import renderScreen from "./renderScreen.js";
+
+        import { io } from "https://cdn.socket.io/4.3.2/socket.io.esm.min.js"
+        
+        const game = createGame()
+        const keyboardListener = createKeyboardListener(document)
+        
+        const socket = io()
+        const screen = document.getElementById('screen')
+        
+        socket.on('connect', () => {
+            const playerId = socket.id
+            console.log(`> Connected on server with id: ${playerId}`)
+
+            renderScreen(screen, game, playerId)
+        })
+        
+        socket.on('setup', (state) => {
+            console.log('> Receiving state from server')
+            
+            const playerId = socket.id
+            
+            screen.width = state.screen.width
+            screen.height = state.screen.height
+            
+            game.setState(state)
+
+            keyboardListener.registerPlayerId(playerId)
+            keyboardListener.subscribe(game.movePlayer)
+            keyboardListener.subscribe((command) => {
+                socket.emit(command.type, command)
+            })
+        })
+
+        socket.on('add-player', (command) => {
+            game.addPlayer(command)
+        })
+        
+        socket.on('remove-player', (command) => {
+            game.removePlayer(command)
+        })
+
+        socket.on('move-player', (command) => {
+            const playerId = socket.id
+
+            if(playerId !== command.playerId){
+                game.movePlayer(command)
+            }
+        })
+
+        socket.on('add-fruit', (command) => {
+            game.addFruit(command)
+        })
+
+        socket.on('remove-fruit', (command) => {
+            game.removeFruit(command)
+        })
+    </script>
+</body>
+
+</html>
