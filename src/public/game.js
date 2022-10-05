@@ -3,8 +3,8 @@ export default function createGame() {
         players: {},
         fruits: {},
         screen: {
-            height: 10,
-            width: 10
+            height: 20,
+            width: 20
         }
     }
 

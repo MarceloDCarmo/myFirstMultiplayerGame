@@ -1,7 +1,10 @@
 export default function renderScreen(screen, game, currentPlayerId) {
     const context = screen.getContext('2d')
 
-    context.clearRect(0, 0, 10, 10)
+    const width = screen.width
+    const height = screen.height
+
+    context.clearRect(0, 0, width, height)
 
     for (const playerId in game.state.players) {
         const player = game.state.players[playerId]
